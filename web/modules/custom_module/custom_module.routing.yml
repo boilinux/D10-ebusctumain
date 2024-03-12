@@ -1,0 +1,7 @@
+custom_module.post_data_log:
+  path: "/api/v1/data/log"
+  defaults:
+    _controller: 'Drupal\custom_module\Controller\CustomApi::post_data_log'
+  methods: [POST]
+  requirements:
+    _access: "TRUE"

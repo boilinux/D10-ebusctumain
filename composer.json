@@ -16,10 +16,14 @@
     ],
     "require": {
         "composer/installers": "^2.0",
+        "drupal/admin_toolbar": "^3.4",
+        "drupal/bootstrap5_admin": "^1.1",
         "drupal/core-composer-scaffold": "^10.2",
         "drupal/core-project-message": "^10.2",
         "drupal/core-recommended": "^10.2",
-        "drush/drush": " ^12.4"
+        "drupal/google_map_field": "^2.0",
+        "drush/drush": " ^12.4",
+        "symfony/http-foundation": "^6.4"
     },
     "conflict": {
         "drupal/drupal": "*"
