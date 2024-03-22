@@ -23,9 +23,28 @@ class CustomApi
             $restToken = $adminUser->field_rest_token->value;
 
             if ($requestToken == $restToken) {
-                $message = 'You have already created attendance for today.';
+                // Create node for data log
+                $bodyData = Json::decode($request->getContent());
+
+                $passengerStatus = $bodyData['passenger_status'];
+                $passengerType = $bodyData['passenger_type'];
+                // $date = \DateTime::createFromFormat('d-m-Y H:i:s', $bodyData['date'] . ' 00:00:00');
+                // $date = $date->getTimestamp();
+                $date = date("F j, Y, g:i a");
+                $title = 'Data log for ' . $passengerType . ' - ' . $passengerStatus . ' - ' . $date;
+
+                $node = Node::create([
+                    'type' => 'data_logs',
+                    'title' => $title,
+                    'uid' => 0,
+                ]);
+
+                $node->save();
+
+                $message = 'Successfully created data log for ' . $title;
             } else {
-                $message = 'Not registered.';
+                // Invalid credentials
+                $message = 'Invalid Credentials';
             }
         } catch (\Exception $error) {
             $message = $error;

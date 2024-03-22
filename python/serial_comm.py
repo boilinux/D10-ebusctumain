@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-import time
-import http.client as httplib
-import urllib
-import sys
+import requests
 import serial
 import json
 import os
 
-class SerialComm :
+
+class SerialComm:
     def __init__(self):
-        #serial initialize
+        # serial initialize
         self.ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
         self.domain = "http://127.0.0.1:8082"
         self.token = "1f45f5d94a0226d1eec541da180fb03eb39170b8"
@@ -18,58 +16,45 @@ class SerialComm :
         self.voice = "-ven-us+f3 -s120"
 
         self.headers = {
-            "Content-type": "application/x-www-form-urlencoded",
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3',
+            'Authorization': self.token,
+            'Content-type': 'application/json',
         }
 
-	# Send credit to localhost.
-    def send_credit (uid, amount):
-        global token
-        global domain
-        global headers
+    def send_message(self, passengerType):
+        try:
+            params = {
+                'passenger_status': 'take_the_bus',
+                'passenger_type': passengerType,
+            }
+            params = json.dumps(params)
 
-        params = urllib.urlencode({
-            "token" : token,
-            "amount" : amount,
-            "uid" : uid,
-        })
+            response = requests.post(
+                self.domain+"/api/v1/data/log",
+                data=params,
+                headers={
+                    'Authorization': self.token,
+                    'Content-type': 'application/json',
+                },
+            )
 
-        httpr = httplib.HTTPConnection(domain)
-        httpr.request("POST", "/api/v1/data/log", params, headers)
+            # try:
+            #     jsonData = json.loads(response.text)
+            # except Exception as e:
+            #     print(e)
 
-        result = httpr.getresponse()
+            print(response.text)
+        except Exception as e:
+            print(e)
+            print('Something went wrong, please check the error.')
+            pass
 
-        print (result.status, result.reason)
+    def speak(self, sentence):
+        os.system("espeak-ng " + self.voice + " \"" + sentence + ".\"")
 
-        sys.exit()
-
-    def send_activity (uid, op):
-        global token
-        global domain
-        global headers
-
-        params = urllib.urlencode({
-            "token" : token,
-            "op" : op,
-            "uid" : uid,
-        })
-
-        httpr = httplib.HTTPConnection(domain)
-        httpr.request("POST", "/api/data/create_activity", params, headers)
-
-        result = httpr.getresponse()
-
-        print (result.status, result.reason)
-
-        sys.exit()
-
-    def speak(self,sentence):
-        os.system("espeak-ng " + self.voice + " \""+ sentence +".\"")
 
 comm = SerialComm()
 
-print ("Serial initialize, done.")
+print("Serial initialize, done.")
 
 comm.speak("System is ready")
 
@@ -79,14 +64,17 @@ while 1:
     receieved = comm.ser.readline().decode().strip()
 
     if receieved:
-        print (receieved)
+        print(receieved)
         if 'button1 is pressed' in receieved:
-            comm.speak("Button 1 was pressed")
+            comm.speak("Button 1 was pressed for student fare.")
+            comm.send_message('student')
 
         if 'button2 is pressed' in receieved:
-            comm.speak("Button 2 was pressed")
+            comm.speak("Button 2 was pressed for senior citizen fare.")
+            comm.send_message('senior_citizen')
 
         if 'button3 is pressed' in receieved:
-            comm.speak("Button 3 was pressed")
+            comm.speak("Button 3 was pressed for regular fare.")
+            comm.send_message('regular')
 
         comm.speak("Please wait for a moment as your request is being processed!")
