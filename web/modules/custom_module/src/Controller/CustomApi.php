@@ -36,6 +36,8 @@ class CustomApi
                 $node = Node::create([
                     'type' => 'data_logs',
                     'title' => $title,
+                    'field_type_of_passenger' => $passengerType,
+                    'field_passenger_status' => $passengerStatus,
                     'uid' => 0,
                 ]);
 
