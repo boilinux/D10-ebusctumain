@@ -74,16 +74,19 @@ while 1:
             comm.speak("Button 1 was pressed for student fare.")
             comm.send_message('student')
             comm.print("Receipt for student fare is 10 pesos", "studentqrcode")
+            comm.speak("Please get your receipt.")
 
         if 'button2 is pressed' in receieved:
             comm.speak("Button 2 was pressed for senior citizen fare.")
             comm.send_message('senior_citizen')
             comm.print("Receipt for senior citizen fare is 10 pesos",
                        "seniorcitizenqrcode")
+            comm.speak("Please get your receipt.")
 
         if 'button3 is pressed' in receieved:
             comm.speak("Button 3 was pressed for regular fare.")
             comm.send_message('regular')
             comm.print("Receipt for regular fare is 13 pesos", "regularqrcode")
+            comm.speak("Please get your receipt.")
 
         comm.speak("Please wait for a moment as your request is being processed!")
