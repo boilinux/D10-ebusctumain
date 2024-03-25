@@ -51,6 +51,10 @@ class SerialComm:
     def speak(self, sentence):
         os.system("espeak-ng " + self.voice + " \"" + sentence + ".\"")
 
+    def print(self, text):
+        os.system("echo \"" + text +
+                  "\" > printtext.txt | lp -d thermalprinter printtext.txt")
+
 
 comm = SerialComm()
 
@@ -68,13 +72,16 @@ while 1:
         if 'button1 is pressed' in receieved:
             comm.speak("Button 1 was pressed for student fare.")
             comm.send_message('student')
+            comm.print("Receipt for student fare is 10 pesos")
 
         if 'button2 is pressed' in receieved:
             comm.speak("Button 2 was pressed for senior citizen fare.")
             comm.send_message('senior_citizen')
+            comm.print("Receipt for senior citizen fare is 10 pesos")
 
         if 'button3 is pressed' in receieved:
             comm.speak("Button 3 was pressed for regular fare.")
             comm.send_message('regular')
+            comm.print("Receipt for regular fare is 13 pesos")
 
         comm.speak("Please wait for a moment as your request is being processed!")
