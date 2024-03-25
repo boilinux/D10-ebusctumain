@@ -54,7 +54,8 @@ class SerialComm:
     def print(self, text, qrcode):
         os.system("echo \"" + text +
                   "\" > printtext.txt | lp -d thermalprinter printtext.txt")
-        os.system("lp -d thermalprinter "+qrcode+".png")
+        os.system(
+            "lp -d thermalprinter /home/myuser/D10-ebusctumain/python/"+qrcode+".png")
 
 
 comm = SerialComm()
