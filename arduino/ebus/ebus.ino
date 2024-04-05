@@ -11,6 +11,10 @@ byte btn_state3 = 0, btn_oldstate3 = 0;
 void setup()
 {
     Serial.begin(9600);
+    while (!Serial)
+    {
+        // wait serial port initialization
+    }
 
     // Initialize pinMode
     pinMode(BUTTON1, INPUT);
@@ -22,6 +26,7 @@ void loop()
     btn_state = digitalRead(BUTTON1);
     btn_state2 = digitalRead(BUTTON2);
     btn_state3 = digitalRead(BUTTON3);
+
     if (btn_state == LOW && btn_state != btn_oldstate)
     {
         Serial.print("button1 is pressed");

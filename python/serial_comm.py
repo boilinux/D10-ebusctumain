@@ -10,10 +10,11 @@ class SerialComm:
     def __init__(self):
         # serial initialize
         self.ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
-        self.domain = "http://127.0.0.1"
+        self.domain = "http://127.0.0.1:8082"
         self.token = "1f45f5d94a0226d1eec541da180fb03eb39170b8"
         self.receieved = ""
         self.voice = "-ven-us+f3 -s120"
+        self.successSpeech = "Please wait for a moment as your request is being processed."
 
         self.headers = {
             'Authorization': self.token,
@@ -43,6 +44,11 @@ class SerialComm:
             #     print(e)
 
             print(response.text)
+            jsonData = json.loads(response.text)
+            if 'No available seat' in jsonData['message']:
+                self.speak('No available seat, i am sorry.')
+                return 0
+            return 1
         except Exception as e:
             print(e)
             print('Something went wrong, please check the error.')
@@ -73,21 +79,24 @@ while 1:
         print(receieved)
         if 'button1 is pressed' in receieved:
             comm.speak("Button 1 was pressed for student fare.")
-            comm.send_message('student')
-            comm.print("Receipt for student fare is 10 pesos", "studentqrcode")
-            comm.speak("Please get your receipt.")
+            if comm.send_message('student'):
+                comm.print("Receipt for student fare is 10 pesos",
+                           "studentqrcode")
+                comm.speak("Please get your receipt.")
+                comm.speak(comm.successSpeech)
 
         if 'button2 is pressed' in receieved:
             comm.speak("Button 2 was pressed for senior citizen fare.")
-            comm.send_message('senior_citizen')
-            comm.print("Receipt for senior citizen fare is 10 pesos",
-                       "seniorcitizenqrcode")
-            comm.speak("Please get your receipt.")
+            if comm.send_message('senior_citizen'):
+                comm.print("Receipt for senior citizen fare is 10 pesos",
+                           "seniorcitizenqrcode")
+                comm.speak("Please get your receipt.")
+                comm.speak(comm.successSpeech)
 
         if 'button3 is pressed' in receieved:
             comm.speak("Button 3 was pressed for regular fare.")
-            comm.send_message('regular')
-            comm.print("Receipt for regular fare is 13 pesos", "regularqrcode")
-            comm.speak("Please get your receipt.")
-
-        comm.speak("Please wait for a moment as your request is being processed!")
+            if comm.send_message('regular'):
+                comm.print("Receipt for regular fare is 13 pesos",
+                           "regularqrcode")
+                comm.speak("Please get your receipt.")
+                comm.speak(comm.successSpeech)
