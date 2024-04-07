@@ -10,7 +10,7 @@ class SerialComm:
     def __init__(self):
         # serial initialize
         self.ser = serial.Serial('/dev/ttyUSB0', 9600, timeout=1)
-        self.domain = "http://127.0.0.1:8082"
+        self.domain = "http://127.0.0.1"
         self.token = "1f45f5d94a0226d1eec541da180fb03eb39170b8"
         self.receieved = ""
         self.voice = "-ven-us+f3 -s120"
