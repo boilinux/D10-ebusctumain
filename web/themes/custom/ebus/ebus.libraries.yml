@@ -2,3 +2,8 @@ global-styling:
   css:
     theme:
       css/style.css: {}
+
+global-scripts:
+  version: 1.x
+  js:
+    js/custom.js: {}

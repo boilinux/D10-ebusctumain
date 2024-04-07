@@ -5,6 +5,7 @@ core_version_requirement: '^8.9 || ^9 || ^10'
 'base theme': bootstrap5_admin
 libraries:
   - ebus/global-styling
+  - ebus/global-scripts
 libraries-extend:
   core/drupal.ajax:
     - bootstrap5_admin/drupal.ajax
