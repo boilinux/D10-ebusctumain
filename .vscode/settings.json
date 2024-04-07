@@ -48,5 +48,6 @@
   "composer.executablePath": "/usr/bin/composer",
   "emmet.includeLanguages": {
     "twig": "html"
-  }
+  },
+  "intelephense.environment.includePaths": ["vendor"]
 }

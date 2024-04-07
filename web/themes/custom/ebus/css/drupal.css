@@ -340,3 +340,7 @@ icon-link.dropdown-toggle::after {
 .form--inline .table td > .row {
   margin-left: auto;
 }
+
+div#block-ebus-views-block-available-seat-block-1 {
+  text-align: center !important;
+}
