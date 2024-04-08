@@ -46,7 +46,7 @@ class CustomApi {
 						// easpek
 						system("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
 						$queryData = \Drupal::database()->query(
-							"SELECT nfbsa.field_bus_seat_available_value AS seat_available, nfbc.field_bus_capacity_value AS capacity FROM node_field_data AS nfd
+							"SELECT nfbsa.field_bus_seat_available_value AS seat_available, nfbc.field_bus_capacity_value AS capacity, nfd.created AS created FROM node_field_data AS nfd
                             LEFT JOIN node__field_bus_seat_available AS nfbsa ON nfbsa.entity_id = nfd.nid
                             LEFT JOIN node__field_bus_capacity AS nfbc ON nfbc.entity_id = nfd.nid
                             WHERE nfd.type = 'data_logs'
@@ -64,6 +64,23 @@ class CustomApi {
 
 							return $jsonResponse;
 						}
+
+						// add state and oldstate for 1 time add qrcode scanner
+						$oldTimestamp = $queryData[0]->created;
+						$newTimestamp = \Drupal::time()->getCurrentTime();
+
+						if ($newTimestamp - $oldTimestamp < 5) {
+							// detect error scanning qrcode
+							$messageCode = 404;
+							$message = "qrcode scanned already multiple times";
+							$jsonResponse = new JsonResponse(['message' => $message, 'status' => $messageCode, 'method' => 'POST', 'data' => $jsonDataResponse]);
+
+							\Drupal::logger('custom_module')->info($jsonResponse);
+
+							return $jsonResponse;
+						}
+						//...
+
 						$oldPassengerSeat = $queryData[0]->seat_available;
 						$busCapacity = $queryData[0]->capacity;
 
