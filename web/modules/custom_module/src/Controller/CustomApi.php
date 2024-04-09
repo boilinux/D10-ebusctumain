@@ -69,10 +69,6 @@ class CustomApi {
 						$newTimestamp = \Drupal::time()->getCurrentTime();
 
 						if ($newTimestamp - $oldTimestamp < $QRCODE_LIMIT_PER_SECONDS) {
-
-							// easpek
-							exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
-
 							// detect error scanning qrcode
 							$messageCode = 404;
 							$message = "qrcode scanned already multiple times";
@@ -83,6 +79,9 @@ class CustomApi {
 							return $jsonResponse;
 						}
 						//...
+
+						// easpek
+						exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
 
 						$oldPassengerSeat = $queryData[0]->seat_available;
 						$busCapacity = $queryData[0]->capacity;
