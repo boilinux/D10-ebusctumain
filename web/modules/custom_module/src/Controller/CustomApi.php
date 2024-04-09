@@ -86,7 +86,7 @@ class CustomApi {
 
 						$seatAvailable = $oldPassengerSeat + 1; // increment new available seat
 						// easpek
-						exec("sudo espeak-ng \"Seat Avaialbe now is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
+						exec("sudo espeak-ng \"Avaialbe seat now, is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
 
 					}
 				} else {
