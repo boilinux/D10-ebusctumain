@@ -44,8 +44,6 @@ class CustomApi {
 						$latitude = $bodyData['latitude'];
 						$longitude = $bodyData['longitude'];
 
-						// easpek
-						exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
 						$queryData = \Drupal::database()->query(
 							"SELECT nfbsa.field_bus_seat_available_value AS seat_available, nfbc.field_bus_capacity_value AS capacity, nfd.created AS created FROM node_field_data AS nfd
                             LEFT JOIN node__field_bus_seat_available AS nfbsa ON nfbsa.entity_id = nfd.nid
@@ -71,6 +69,10 @@ class CustomApi {
 						$newTimestamp = \Drupal::time()->getCurrentTime();
 
 						if ($newTimestamp - $oldTimestamp < $QRCODE_LIMIT_PER_SECONDS) {
+
+							// easpek
+							exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
+
 							// detect error scanning qrcode
 							$messageCode = 404;
 							$message = "qrcode scanned already multiple times";
