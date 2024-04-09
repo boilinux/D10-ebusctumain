@@ -17,6 +17,7 @@ class CustomApi {
 		$jsonDataResponse = new \stdClass();
 		$message = '';
 		$messageCode = 200;
+        private $QRCODE_LIMIT_PER_SECONDS = 10;
 
 		try {
 			$requestToken = $request->headers->get('Authorization');
@@ -69,7 +70,7 @@ class CustomApi {
 						$oldTimestamp = $queryData[0]->created;
 						$newTimestamp = \Drupal::time()->getCurrentTime();
 
-						if ($newTimestamp - $oldTimestamp < 5) {
+						if ($newTimestamp - $oldTimestamp < $QRCODE_LIMIT_PER_SECONDS) {
 							// detect error scanning qrcode
 							$messageCode = 404;
 							$message = "qrcode scanned already multiple times";
