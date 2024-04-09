@@ -44,7 +44,7 @@ class CustomApi {
 						$longitude = $bodyData['longitude'];
 
 						// easpek
-						system("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
+						exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
 						$queryData = \Drupal::database()->query(
 							"SELECT nfbsa.field_bus_seat_available_value AS seat_available, nfbc.field_bus_capacity_value AS capacity, nfd.created AS created FROM node_field_data AS nfd
                             LEFT JOIN node__field_bus_seat_available AS nfbsa ON nfbsa.entity_id = nfd.nid
@@ -86,7 +86,7 @@ class CustomApi {
 
 						$seatAvailable = $oldPassengerSeat + 1; // increment new available seat
 						// easpek
-						system("sudo espeak-ng \"Seat Avaialbe now is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
+						exec("sudo espeak-ng \"Seat Avaialbe now is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
 
 					}
 				} else {
