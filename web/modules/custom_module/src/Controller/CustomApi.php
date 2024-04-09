@@ -17,7 +17,7 @@ class CustomApi {
 		$jsonDataResponse = new \stdClass();
 		$message = '';
 		$messageCode = 200;
-        private $QRCODE_LIMIT_PER_SECONDS = 10;
+		$QRCODE_LIMIT_PER_SECONDS = 10;
 
 		try {
 			$requestToken = $request->headers->get('Authorization');
