@@ -5,3 +5,10 @@ custom_module.post_data_log:
   methods: [POST]
   requirements:
     _access: "TRUE"
+custom_module.post_update_gps:
+  path: "/api/v1/data/log/update/gps"
+  defaults:
+    _controller: 'Drupal\custom_module\Controller\CustomApi::post_update_gps'
+  methods: [POST]
+  requirements:
+    _access: "TRUE"

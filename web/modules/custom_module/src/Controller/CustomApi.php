@@ -86,6 +86,20 @@ class CustomApi {
 						$oldPassengerSeat = $queryData[0]->seat_available;
 						$busCapacity = $queryData[0]->capacity;
 
+						// check if seat available is less than the capacity; otherwise return invalid.
+						if ($oldPassengerSeat >= $busCapacity) {
+							$messageCode = 404;
+							$message = "seat available is equal to capacity no need to add more seat.";
+							$jsonResponse = new JsonResponse(['message' => $message, 'status' => $messageCode, 'method' => 'POST', 'data' => $jsonDataResponse]);
+
+							\Drupal::logger('custom_module')->info($jsonResponse);
+
+							// easpek
+							exec("sudo espeak-ng \"Seat available is equal to capacity, return invalid.\" -ven-us+f3 -s150 ");
+
+							return $jsonResponse;
+						}
+
 						$seatAvailable = $oldPassengerSeat + 1; // increment new available seat
 						// easpek
 						exec("sudo espeak-ng \"Avaialbe seat now, is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
@@ -145,6 +159,68 @@ class CustomApi {
 				$node->save();
 
 				$message = 'Successfully created data log for ' . $title;
+			} else {
+				// Invalid credentials
+				$message = 'Invalid Credentials';
+			}
+		} catch (\Exception $error) {
+			$message = $error;
+			$messageCode = 404;
+		}
+
+		$jsonResponse = new JsonResponse(['message' => $message, 'status' => $messageCode, 'method' => 'POST', 'data' => $jsonDataResponse]);
+
+		\Drupal::logger('custom_module')->info($jsonResponse);
+
+		return $jsonResponse;
+	}
+
+	public function post_update_gps(Request $request) {
+		$jsonDataResponse = new \stdClass();
+		$message = '';
+		$messageCode = 200;
+
+		try {
+			$requestToken = $request->headers->get('Authorization');
+			$adminUser = User::load(1);
+			$restToken = $adminUser->field_rest_token->value;
+
+			if ($requestToken == $restToken) {
+				$latitude = "";
+				$longitude = "";
+
+				// Create node for data log
+				$bodyData = Json::decode($request->getContent());
+
+				$queryData = \Drupal::database()->query(
+					"SELECT nfd.nid AS nid FROM node_field_data AS nfd
+                     LEFT JOIN node__field_location AS nfl ON nfl.entity_id = nfd.nid
+                     WHERE nfd.type = 'data_logs' AND nfl.entity_id IS NULL"
+				)->fetchAll();
+
+				if (empty($queryData)) {
+					// no data to update
+					$messageCode = 404;
+					$message = "No data logs to update";
+					$jsonResponse = new JsonResponse(['message' => $message, 'status' => $messageCode, 'method' => 'POST', 'data' => $jsonDataResponse]);
+
+					\Drupal::logger('custom_module')->info($jsonResponse);
+
+					return $jsonResponse;
+				}
+
+				$latitude = $bodyData['latitude'];
+				$longitude = $bodyData['longitude'];
+
+				// $jsonDataResponse = $queryData;
+				foreach ($queryData as $data) {
+					$node = Node::load($data->nid);
+
+					$node->set('field_location', ['lat' => $latitude, 'lon' => $longitude, 'name' => 'location', 'zoom' => 15, 'type' => 'roadmap', 'width' => '500px', 'height' => '500px', 'marker' => 1, 'traffic' => 0, 'marker_icon' => '', 'controls' => 1]);
+					$node->save();
+				}
+
+				$message = 'Successfully update gps status';
 			} else {
 				// Invalid credentials
 				$message = 'Invalid Credentials';
