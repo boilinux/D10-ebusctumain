@@ -80,9 +80,6 @@ class CustomApi {
 						}
 						//...
 
-						// easpek
-						exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
-
 						$oldPassengerSeat = $queryData[0]->seat_available;
 						$busCapacity = $queryData[0]->capacity;
 
@@ -99,6 +96,9 @@ class CustomApi {
 
 							return $jsonResponse;
 						}
+
+						// easpek
+						exec("sudo espeak-ng \"Hello Driver, Passenger want to get off the bus.\" -ven-us+f3 -s150 ");
 
 						$seatAvailable = $oldPassengerSeat + 1; // increment new available seat
 						// easpek
