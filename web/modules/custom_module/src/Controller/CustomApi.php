@@ -104,6 +104,18 @@ class CustomApi {
 						// easpek
 						exec("sudo espeak-ng \"Avaialbe seat now, is " . $seatAvailable . ".\" -ven-us+f3 -s150 ");
 
+					} else {
+						$messageCode = 404;
+						$message = "Invalid qr code.";
+						$jsonResponse = new JsonResponse(['message' => $message, 'status' => $messageCode, 'method' => 'POST', 'data' => $jsonDataResponse]);
+
+						\Drupal::logger('custom_module')->info($jsonResponse);
+
+						// easpek
+						exec("sudo espeak-ng \"Invalid qrcode.\" -ven-us+f3 -s150 ");
+
+						return $jsonResponse;
+
 					}
 				} else {
 					$queryData = \Drupal::database()->query(
